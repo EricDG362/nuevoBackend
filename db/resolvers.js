@@ -1,8 +1,10 @@
 // Datos simulados
 const Usuario = require('../models/Usuario') //nos traemos el modelo y lo guardamos en usuario
+const Procedimiento = require('../models/Procedimientos') //nos traemos el modelo y lo guardamos en usuario
 const bcrypt = require('bcryptjs') //iomportamos para hashear la contraseña
 const jwt = require('jsonwebtoken') //importamos la libreria para crear token
-require('dotenv').config({ path: './config/variables.env'})  //firmamos el token con palabrasecreta de .env
+const Procedimientos = require('../models/Procedimientos')
+require('dotenv').config({ path:'variables.env'})  //firmamos el token con palabrasecreta de .env
 
 
 
@@ -20,10 +22,19 @@ const crearToken = (usuario, secreta,expiresIn) => {
 
 
 const resolvers = {
-  Query: {
-   
 
-  },
+  //aca se obtienen datos
+  Query: {
+    
+    //consulta para obtener los procedimientos
+    obtenerProcedimientos: async (_, { }, context) => {
+      const prcedimiento = await Procedimientos.find({creador: context.usuario.id})
+        return prcedimiento
+    }
+
+
+
+  }, 
 
 
 
@@ -94,19 +105,83 @@ const resolvers = {
 
     nuevoProcedimiento: async (_, { input }, context) => {
 
-        console.log ('creando el proyecto nuevo')
+       try {
+        //creamos una nueva instaancia
+          const procedimieto = new Procedimiento (input) //le pasamos el input q viene coin toda la informacion
 
-    }
+          //le asociamos el creador
+          procedimieto.creador = context.usuario.id //este context id viene del resolver
+
+          //lo guardamos
+          const resultado = await procedimieto.save()
+
+          //lo retornamos
+          return resultado
+
+        
+       } catch (error) {
+        console.log(error)
+       }
+
+    },
+
+    actualizarProcedimiento: async (_, {id, input} , context) => {
+
+      //si el proyecto existe
+      let procedimieto = await Procedimiento.findById(id)
+
+      //si el procedimiento no existe
+      if(!procedimieto){
+        throw new Error("Procedimiento no encontrado");
+        
+      }
+
+      //la persona q lo quiere modificar es la misma q lo creo
+        if(procedimieto.creador.toString() !== context.usuari.id){ //si la persona q lo creo es distinta al q lo quierre editar
+
+          throw new Error("Usted no posee creedenciales para editar este documento");
+          
+
+        }
+      //guardar proyecto
+        procedimieto = await Procedimiento.findByIdAndUpdate({_id: id}, input, {new:true})
+          return procedimieto
+    },
+
+
+    eliminarProcedimiento: async (_, {id} , context) => {
+
+
+      //si el proyecto existe
+      let procedimieto = await Procedimiento.findById(id)
+
+      //si el procedimiento no existe
+      if(!procedimieto){
+        throw new Error("Procedimiento no encontrado");
+        
+      }
+
+      //la persona q lo quiere modificar es la misma q lo creo
+        if(procedimieto.creador.toString() !== context.usuari.id){ //si la persona q lo creo es distinta al q lo quierre editar
+
+          throw new Error("Usted no posee creedenciales para editar este documento");
+          
+
+        }
+
+        //eliminar
+
+        await Procedimiento.findOneAndDelete({_id : id})
+
+        return 'Proyecto Eliminado con Exito'
+
+    },
+
+
+
+
 
   }
-
-
-
-
-
-
-
-
 };
 
 module.exports = resolvers;

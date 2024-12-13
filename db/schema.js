@@ -4,19 +4,16 @@ const { ApolloServer, gql } = require('apollo-server')
 
 const typeDefs = gql`
 
-  # Definición de un tipo básico llamado User
-  type User {
-    id: ID!
-    name: String!
-    email: String!
-  }
+
 
   # Definición de consultas disponibles.Es como un select para obtener datos
   type Query {
-    getUser(id: ID!): User
-    getUsers: [User!]!
+    obtenerProcedimientos : [Procedimiento]
   }
 
+
+
+  #define la forma de los datos
   type Procedimiento{
   nombre: String
   id: ID
@@ -58,7 +55,10 @@ nombre: String!
   autenticarUsuario(input: AutenticarInput): Token
 
   nuevoProcedimiento(input:ProcedimientoInput): Procedimiento
+
+  actualizarProcedimiento(id: ID!, input:ProcedimientoInput): Procedimiento
   
+  eliminarProcedimiento (id: ID!) : String
   }
 
   
