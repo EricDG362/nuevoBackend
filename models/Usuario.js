@@ -16,6 +16,7 @@ const usuarioSchema = new mongoose.Schema({
         required: true,
         trim: true,
         unique: true,
+        lowercase: true, //inserta todo el mail en minisculas
     },
     password: {
         type: String,

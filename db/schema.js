@@ -15,7 +15,8 @@ const typeDefs = gql`
 
   #define la forma de los datos
   type Procedimiento{
-  nombre: String
+  sumario: String
+  proce: String
   id: ID
   }
 
@@ -39,7 +40,8 @@ const typeDefs = gql`
   }
 
   input ProcedimientoInput{
-nombre: String!
+sumario: String!
+proce: String!
   }
 
 

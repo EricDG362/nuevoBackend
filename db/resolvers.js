@@ -10,9 +10,9 @@ require('dotenv').config({ path:'variables.env'})  //firmamos el token con palab
 
 const crearToken = (usuario, secreta,expiresIn) => {
 
-  const {id, email} = usuario 
+  const {id, email, nombre} = usuario 
 
-  return jwt.sign({id,email}, secreta, {expiresIn}) //con sign firmasmos el token y expireIn es la propiedad q busca
+  return jwt.sign({id, email, nombre}, secreta, {expiresIn}) //con sign firmasmos el token y expireIn es la propiedad q busca
 }
 
 
@@ -98,13 +98,14 @@ const resolvers = {
       
       //dar acceso a l app
       return {
-        token: crearToken(existeUsuario,process.env.SECRETA, '2hr') //tiempo de expiracion 2 horas
+        token: crearToken(existeUsuario,process.env.SECRETA, '6hr') //tiempo de expiracion 2 horas
       }
     },
 
 
     nuevoProcedimiento: async (_, { input }, context) => {
 
+      console.log('Input recibido:', input);
        try {
         //creamos una nueva instaancia
           const procedimieto = new Procedimiento (input) //le pasamos el input q viene coin toda la informacion
@@ -173,7 +174,7 @@ const resolvers = {
 
         await Procedimiento.findOneAndDelete({_id : id})
 
-        return 'Proyecto Eliminado con Exito'
+        return 'Procedimiento Eliminado con Exito'
 
     },
 

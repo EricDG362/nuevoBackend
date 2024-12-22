@@ -16,25 +16,24 @@ conectarDB ()
 const server = new ApolloServer ({
     typeDefs,
     resolvers,
-    context: ({req})=>{
-        const token = req.headers['authorization'] || '' //si no existe token entonces es vacio
-
-        if (token){
-
+    context: ({ req }) => {
+        const token = req.headers['authorization'] || '';
+        console.log('Token recibido:', token); // Agrega este log para depurar
+    
+        if (token) {
             try {
-                //verificamos el usuariom con el token q tomamso y la firma de la palabra secreta
-                const usuario = jwt.verify(token, process.env.SECRETA)
-
-                return {
-                    usuario
-                }
-
-
+                const usuario = jwt.verify(token.replace('Bearer ', '').trim(), process.env.SECRETA);
+                console.log('Usuario verificado:', usuario); // Agrega este log para confirmar la verificación
+                return { usuario };
             } catch (error) {
-                console.log(error)
+                console.error('Error al verificar el token:', error.message); // Log del error
             }
+        } else {
+            console.log('No se proporcionó un token');
         }
+        return {};
     }
+    
 })
 
 

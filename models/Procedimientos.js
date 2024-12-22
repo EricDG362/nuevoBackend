@@ -1,21 +1,28 @@
-const mongoose = require ('mongoose')
+const mongoose = require('mongoose')
 
-const ProcedimientosSchema = new mongoose.Schema ({
+const ProcedimientosSchema = new mongoose.Schema({
 
 
-    nombre: {
+    sumario: {
         type: String,
         required: true, //obligatorio
         trim: true, //sin espacios
 
     },
 
-    creador:{
+    proce: {
+        type: String,
+        required: true, //obligatorio
+
+
+    },
+
+    creador: {
         type: mongoose.Schema.Types.ObjectId,//esto va a venir de la base de dattos
         ref: 'Usuario'  //esta referencvia viene o tiene q tomarla de usuario.js del export module
     },
 
-    creado:{
+    creado: {
         type: Date,
         default: Date.now()
     }
@@ -25,6 +32,6 @@ const ProcedimientosSchema = new mongoose.Schema ({
 
 })
 
-const Procedimientos  = mongoose.model('Procedimientos', ProcedimientosSchema)
+const Procedimientos = mongoose.model('Procedimientos', ProcedimientosSchema)
 
 module.exports = Procedimientos;
