@@ -152,6 +152,13 @@ const resolvers = {
 
     eliminarProcedimiento: async (_, {id} , context) => {
 
+      console.log('ID recibido de resolvers:', id);
+
+      
+      if (!id) {
+        throw new Error('El ID no se recibió correctamente');
+      }
+    
 
       //si el proyecto existe
       let procedimieto = await Procedimiento.findById(id)
@@ -163,7 +170,7 @@ const resolvers = {
       }
 
       //la persona q lo quiere modificar es la misma q lo creo
-        if(procedimieto.creador.toString() !== context.usuari.id){ //si la persona q lo creo es distinta al q lo quierre editar
+        if(procedimieto.creador.toString() !== context.usuario.id){ //si la persona q lo creo es distinta al q lo quierre editar
 
           throw new Error("Usted no posee creedenciales para editar este documento");
           
