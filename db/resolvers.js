@@ -4,15 +4,15 @@ const Procedimiento = require('../models/Procedimientos') //nos traemos el model
 const bcrypt = require('bcryptjs') //iomportamos para hashear la contraseña
 const jwt = require('jsonwebtoken') //importamos la libreria para crear token
 const Procedimientos = require('../models/Procedimientos')
-require('dotenv').config({ path:'variables.env'})  //firmamos el token con palabrasecreta de .env
+require('dotenv').config({ path: 'variables.env' })  //firmamos el token con palabrasecreta de .env
 
 
 
-const crearToken = (usuario, secreta,expiresIn) => {
+const crearToken = (usuario, secreta, expiresIn) => {
 
-  const {id, email, nombre} = usuario 
+  const { id, email, nombre } = usuario
 
-  return jwt.sign({id, email, nombre}, secreta, {expiresIn}) //con sign firmasmos el token y expireIn es la propiedad q busca
+  return jwt.sign({ id, email, nombre }, secreta, { expiresIn }) //con sign firmasmos el token y expireIn es la propiedad q busca
 }
 
 
@@ -25,16 +25,16 @@ const resolvers = {
 
   //aca se obtienen datos
   Query: {
-    
+
     //consulta para obtener los procedimientos
     obtenerProcedimientos: async (_, { }, context) => {
-      const prcedimiento = await Procedimientos.find({creador: context.usuario.id})
-        return prcedimiento
+      const prcedimiento = await Procedimientos.find({ creador: context.usuario.id })
+      return prcedimiento
     }
 
 
 
-  }, 
+  },
 
 
 
@@ -82,23 +82,23 @@ const resolvers = {
       const existeUsuario = await Usuario.findOne({ email }) //aca busca el primer registro q coincida
 
       //si no existe
-      if(!existeUsuario){
+      if (!existeUsuario) {
         throw new Error("El Usuario no existe");
-        
+
       }
 
       //si el password es correcto
-      const PassCorrecto = await bcrypt.compare (password, existeUsuario.password)//el 1 es el pass q se le passa x input y el 2 es el q esta en la base de datos ya guardado y hasheado
+      const PassCorrecto = await bcrypt.compare(password, existeUsuario.password)//el 1 es el pass q se le passa x input y el 2 es el q esta en la base de datos ya guardado y hasheado
 
-      if (!PassCorrecto){ // si da false xq es incorrecto
-          throw new Error("Password incorrecto");
-          
+      if (!PassCorrecto) { // si da false xq es incorrecto
+        throw new Error("Password incorrecto");
+
       }
 
-      
+
       //dar acceso a l app
       return {
-        token: crearToken(existeUsuario,process.env.SECRETA, '6hr') //tiempo de expiracion 2 horas
+        token: crearToken(existeUsuario, process.env.SECRETA, '6hr') //tiempo de expiracion 2 horas
       }
     },
 
@@ -106,82 +106,87 @@ const resolvers = {
     nuevoProcedimiento: async (_, { input }, context) => {
 
       console.log('Input recibido:', input);
-       try {
+      try {
         //creamos una nueva instaancia
-          const procedimieto = new Procedimiento (input) //le pasamos el input q viene coin toda la informacion
+        const procedimieto = new Procedimiento(input) //le pasamos el input q viene coin toda la informacion
 
-          //le asociamos el creador
-          procedimieto.creador = context.usuario.id //este context id viene del resolver
+        //le asociamos el creador
+        procedimieto.creador = context.usuario.id //este context id viene del resolver
 
-          //lo guardamos
-          const resultado = await procedimieto.save()
+        //lo guardamos
+        const resultado = await procedimieto.save()
 
-          //lo retornamos
-          return resultado
+        //lo retornamos
+        return resultado
 
-        
-       } catch (error) {
+
+      } catch (error) {
         console.log(error)
-       }
+      }
 
     },
 
-    actualizarProcedimiento: async (_, {id, input} , context) => {
+    actualizarProcedimiento: async (_, { id, input }, context) => {
 
       //si el proyecto existe
-      let procedimieto = await Procedimiento.findById(id)
+      let procedimiento = await Procedimiento.findById(id)
 
       //si el procedimiento no existe
-      if(!procedimieto){
+      if (!procedimiento) {
         throw new Error("Procedimiento no encontrado");
-        
+
       }
 
       //la persona q lo quiere modificar es la misma q lo creo
-        if(procedimieto.creador.toString() !== context.usuari.id){ //si la persona q lo creo es distinta al q lo quierre editar
+      if (procedimiento.creador.toString() !== context.usuari.id) { //si la persona q lo creo es distinta al q lo quierre editar
 
-          throw new Error("Usted no posee creedenciales para editar este documento");
-          
+        throw new Error("Usted no posee creedenciales para editar este documento");
 
-        }
+
+      }
       //guardar proyecto
-        procedimieto = await Procedimiento.findByIdAndUpdate({_id: id}, input, {new:true})
-          return procedimieto
+      procedimiento = await Procedimiento.findByIdAndUpdate({ _id: id }, input, { new: true })
+      return procedimiento
     },
 
 
-    eliminarProcedimiento: async (_, {id} , context) => {
+    eliminarProcedimiento: async (_, { id }, context) => {
 
       console.log('ID recibido de resolvers:', id);
 
-      
+
       if (!id) {
         throw new Error('El ID no se recibió correctamente');
       }
-    
+
 
       //si el proyecto existe
-      let procedimieto = await Procedimiento.findById(id)
+      let procedimiento = await Procedimiento.findById(id)
 
       //si el procedimiento no existe
-      if(!procedimieto){
+      if (!procedimiento) {
         throw new Error("Procedimiento no encontrado");
-        
+
       }
 
       //la persona q lo quiere modificar es la misma q lo creo
-        if(procedimieto.creador.toString() !== context.usuario.id){ //si la persona q lo creo es distinta al q lo quierre editar
+      if (procedimiento.creador.toString() !== context.usuario.id) { //si la persona q lo creo es distinta al q lo quierre editar
 
-          throw new Error("Usted no posee creedenciales para editar este documento");
-          
+        throw new Error("Usted no posee creedenciales para editar este documento");
 
-        }
 
-        //eliminar
+      }
 
-        await Procedimiento.findOneAndDelete({_id : id})
+      //eliminar
 
-        return 'Procedimiento Eliminado con Exito'
+      await Procedimiento.findOneAndDelete({ _id: id })
+
+      return {
+        id: procedimiento.id,
+        sumario: procedimiento.sumario,
+        proce: procedimiento.proce,
+        mensaje: 'Procedimiento Eliminado con Exito',  // Mensaje de éxito
+      };
 
     },
 

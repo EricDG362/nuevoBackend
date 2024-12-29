@@ -20,6 +20,13 @@ const typeDefs = gql`
   id: ID
   }
 
+  type ProcedimientoEliminado {
+  id: ID!
+  sumario: String
+  proce: String
+  mensaje: String
+}
+
   #exclamacion para q sean campos obligatorios
 
   input UsuarioInput {
@@ -60,7 +67,7 @@ proce: String!
 
   actualizarProcedimiento(id: ID!, input:ProcedimientoInput): Procedimiento
   
-  eliminarProcedimiento (id: ID!) : String
+  eliminarProcedimiento (id: ID!) : ProcedimientoEliminado
   }
 
   
