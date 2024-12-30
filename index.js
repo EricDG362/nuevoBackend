@@ -12,6 +12,7 @@ const conectarDB = require('./config/db')
 //mandamos allamar a la funcion en este caso q se conecte a la db
 conectarDB ()
 
+
 //aca se los pasamos
 const server = new ApolloServer ({
     typeDefs,

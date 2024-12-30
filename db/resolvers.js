@@ -1,10 +1,12 @@
 // Datos simulados
 const Usuario = require('../models/Usuario') //nos traemos el modelo y lo guardamos en usuario
 const Procedimiento = require('../models/Procedimientos') //nos traemos el modelo y lo guardamos en usuario
+const { DateTimeResolver } = require('graphql-scalars'); // Importamos el tipo DateTime
 const bcrypt = require('bcryptjs') //iomportamos para hashear la contraseña
 const jwt = require('jsonwebtoken') //importamos la libreria para crear token
 const Procedimientos = require('../models/Procedimientos')
 require('dotenv').config({ path: 'variables.env' })  //firmamos el token con palabrasecreta de .env
+
 
 
 
@@ -23,6 +25,7 @@ const crearToken = (usuario, secreta, expiresIn) => {
 
 const resolvers = {
 
+  Date: DateTimeResolver, 
   //aca se obtienen datos
   Query: {
 
@@ -138,7 +141,7 @@ const resolvers = {
       }
 
       //la persona q lo quiere modificar es la misma q lo creo
-      if (procedimiento.creador.toString() !== context.usuari.id) { //si la persona q lo creo es distinta al q lo quierre editar
+      if (procedimiento.creador.toString() !== context.usuario.id) { //si la persona q lo creo es distinta al q lo quierre editar
 
         throw new Error("Usted no posee creedenciales para editar este documento");
 
