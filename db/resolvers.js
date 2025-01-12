@@ -81,6 +81,7 @@ const resolvers = {
 
       const { email, password } = input //aplicamos destructuring para evaluar
 
+
       //busacamos el usuario
       const existeUsuario = await Usuario.findOne({ email }) //aca busca el primer registro q coincida
 
@@ -89,6 +90,10 @@ const resolvers = {
         throw new Error("El Usuario no existe");
 
       }
+        // Verificamos si el estado del usuario es 'false' (es decir, no habilitado)
+        if (existeUsuario.estado === false) {
+          throw new Error("Usted aún no ha sido habilitado");
+        }
 
       //si el password es correcto
       const PassCorrecto = await bcrypt.compare(password, existeUsuario.password)//el 1 es el pass q se le passa x input y el 2 es el q esta en la base de datos ya guardado y hasheado
@@ -101,6 +106,7 @@ const resolvers = {
 
       //dar acceso a l app
       return {
+        estado:existeUsuario.estado,
         token: crearToken(existeUsuario, process.env.SECRETA, '6hr') //tiempo de expiracion 2 horas
       }
     },

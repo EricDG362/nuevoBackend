@@ -24,6 +24,19 @@ const typeDefs = gql`
     mensaje: String
   }
 
+  type Usuario {
+  id: ID!
+  nombre: String!
+  apellido: String!
+  telefono: String!
+  email: String!
+  estado: Boolean!  # Agregado para verificar el estado del usuario
+}
+  type Autenticacion {
+  token: String
+  estado: Boolean
+}
+
   # Exclamación para que sean campos obligatorios
   input UsuarioInput {
     nombre: String!
@@ -31,11 +44,13 @@ const typeDefs = gql`
     telefono: String!
     email: String!
     password: String!
+    
   }
 
   input AutenticarInput {
     email: String!
     password: String!
+
   }
 
   type Token {
@@ -50,7 +65,7 @@ const typeDefs = gql`
 
   type Mutation {
     crearUsuario(input: UsuarioInput): String
-    autenticarUsuario(input: AutenticarInput): Token
+    autenticarUsuario(input: AutenticarInput): Autenticacion
     nuevoProcedimiento(input: ProcedimientoInput): Procedimiento
     actualizarProcedimiento(id: ID!, input: ProcedimientoInput): Procedimiento
     eliminarProcedimiento(id: ID!): ProcedimientoEliminado

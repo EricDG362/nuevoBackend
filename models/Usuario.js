@@ -11,7 +11,7 @@ const usuarioSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    telefono:{
+    telefono: {
         type: String,
         required: true,
         trim: true,
@@ -27,6 +27,10 @@ const usuarioSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
+    },
+    estado: {
+        type: Boolean,
+        default: false, // Establecer el valor por defecto como false
     },
     registro: {
         type: Date,
