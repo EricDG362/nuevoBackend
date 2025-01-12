@@ -28,6 +28,7 @@ const typeDefs = gql`
   input UsuarioInput {
     nombre: String!
     apellido: String!
+    telefono: String!
     email: String!
     password: String!
   }
