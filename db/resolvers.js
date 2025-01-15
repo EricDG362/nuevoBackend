@@ -33,7 +33,12 @@ const resolvers = {
     obtenerProcedimientos: async (_, { }, context) => {
       const prcedimiento = await Procedimientos.find({ creador: context.usuario.id })
       return prcedimiento
-    }
+    },
+
+    obtenerUsuarios: async () => {
+      const usuarios = await Usuario.find();
+      return usuarios;
+    },
 
 
 
@@ -92,7 +97,7 @@ const resolvers = {
       }
         // Verificamos si el estado del usuario es 'false' (es decir, no habilitado)
         if (existeUsuario.estado === false) {
-          throw new Error("Usted aún no ha sido habilitado");
+          throw new Error("Usted aún no ha sido habilitado. Aguarde al administrador!");
         }
 
       //si el password es correcto

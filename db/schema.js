@@ -7,6 +7,7 @@ const typeDefs = gql`
   # Definición de consultas disponibles.Es como un select para obtener datos
   type Query {
     obtenerProcedimientos: [Procedimiento]
+     obtenerUsuarios: [Usuario!]!
   }
 
   # Define la forma de los datos
