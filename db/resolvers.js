@@ -205,10 +205,31 @@ const resolvers = {
     },
 
 
-
-
+    actualizarEstado: async (_, { id, input, estado }) => {
+      try {
+          // Verifica que el usuario exista
+          let usuario = await Usuario.findById(id);
+          if (!usuario) {
+              throw new Error('Usuario no encontrado');
+          }
+  
+          // Actualiza el estado y otros campos
+          usuario = await Usuario.findByIdAndUpdate(
+              { _id: id },
+              { ...input, estado },
+              { new: true }
+          );
+  
+          return usuario;
+      } catch (error) {
+          console.error('Error en actualizarEstado:', error);
+          throw new Error('Error al actualizar el estado');
+      }
+  },
 
   }
-};
+
+}
+
 
 module.exports = resolvers;

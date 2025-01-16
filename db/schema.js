@@ -44,7 +44,7 @@ const typeDefs = gql`
     apellido: String!
     telefono: String!
     email: String!
-    password: String!
+    password: String
     
   }
 
@@ -70,6 +70,7 @@ const typeDefs = gql`
     nuevoProcedimiento(input: ProcedimientoInput): Procedimiento
     actualizarProcedimiento(id: ID!, input: ProcedimientoInput): Procedimiento
     eliminarProcedimiento(id: ID!): ProcedimientoEliminado
+    actualizarEstado(id:ID!, input:UsuarioInput, estado: Boolean): Usuario
   }
 `;
 
