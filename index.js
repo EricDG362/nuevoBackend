@@ -41,7 +41,7 @@ const server = new ApolloServer ({
 
 
 
-
-server.listen().then(({url})=>{
+//EL PROCESS.ENV.PORT ES PARA HEROKU
+server.listen({port: process.env.PORT || 4000}).then(({url})=>{
     console.log(`Servidor listo en la url ${url}`)
 })
